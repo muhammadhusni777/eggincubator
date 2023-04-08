@@ -69,9 +69,9 @@ Window {
 					
 					//anchors.horizontalCenter: parent.horizontalCenter
 					x: 450
-					y : 650
+					y : 600
 					
-					text: "DIKY ZAKARIA, AJANG RAHMAT, MUHAMMAD HUSNI"
+					text: "DIKY ZAKARIA, AJANG RAHMAT, MUHAMMAD HUSNI\nBILAL, ALI, FAUZIE, DANY"
 					font.family: "Helvetica"
 					font.pointSize: 12
 					color: "white"
@@ -567,7 +567,7 @@ Button {
 				height: 20
 				width: 275
 				//value: 80
-				to: 0.3
+				to: 1
 				stepSize: 0.0001
 				visible: true
 				
@@ -612,7 +612,7 @@ Button {
 				height: 20
 				width: 275
 				//value: 80
-				to: 0.2
+				to: 0.15
 				stepSize: 0.0001
 				visible: true
 				onValueChanged: {
@@ -694,10 +694,10 @@ Button {
                 property double valueCH4: 0
                 title: ""
                 legend.visible: false
-                property double startTIME: 1
+                property double startTIME: 0
                 property int timcnt: 0
-                property double periodGRAPH: 10 //30
-                property double intervalTM: 100 //200
+                property double periodGRAPH: 30 //30
+                property double intervalTM: 200 //200
                 anchors.fill: parent
 				backgroundColor:"transparent"
                 
@@ -752,46 +752,7 @@ Button {
                 antialiasing: true
             }
 
-            Timer {
-                id: tm
-                repeat: true
-				interval : 100
-                running: true
-                onTriggered: {
-                        cv.timcnt = cv.timcnt + 1
-                        //cv1.timcnt = cv1.timcnt + 1
-                      
-                        cv.valueCH1 = parseFloat(slider1.value)
-                        cv.valueCH2 = parseFloat(gauge2.value)
-                        cv.valueCH3 = 70
-                        cv.valueCH4 = 100
-
-
-                        lines1.append(cv.startTIME+cv.timcnt*cv.intervalTM ,cv.valueCH1)
-                        lines2.append(cv.startTIME+cv.timcnt*cv.intervalTM ,cv.valueCH2)
-                        //lines3.append(cv.startTIME+cv.timcnt*cv.intervalTM ,cv.valueCH3)
-                        //lines4.append(cv.startTIME+cv.timcnt*cv.intervalTM ,cv.valueCH4)
-
-                        //lines1.append(cv.valueTM1+cv.timcnt*500 ,cv.valueCH1)
-                        //lines2.append(cv.valueTM1+cv.timcnt*500 ,cv.valueCH2)
-                        //lines3.append(cv.valueTM1+cv.timcnt*500 ,cv.valueCH3)
-                        //lines4.append(cv.valueTM1+cv.timcnt*500 ,cv.valueCH4)
-
-                        lines1.axisX.min = cv.timcnt < cv.periodGRAPH ? new Date(cv.startTIME) : new Date(cv.startTIME  - cv.periodGRAPH*1000 + cv.timcnt*1000)
-                        lines1.axisX.max = cv.timcnt < cv.periodGRAPH ? new Date(cv.startTIME  + cv.periodGRAPH*1000) : new Date(cv.startTIME   + cv.timcnt*1000)
-
-                        lines1.axisX.min = new Date(cv.startTIME-cv.periodGRAPH*1000 + cv.timcnt*500)
-                        lines1.axisX.max = new Date(cv.startTIME + cv.timcnt*500)
-
-                        lines1.axisX.min = new Date (cv.startTIME-cv.periodGRAPH*1000 + cv.timcnt*cv.intervalTM)  
-                        lines1.axisX.max = new Date (cv.startTIME + cv.timcnt*cv.intervalTM)  
-
-
-                        lines2.axisX.min = new Date(cv.startTIME-cv.periodGRAPH*1000 + cv.timcnt*cv.intervalTM)
-                        lines2.axisX.max = new Date(cv.startTIME + cv.timcnt*cv.intervalTM)
-                    }
-            }
-        
+            
 		}
 	
 	
@@ -897,15 +858,15 @@ Button {
 					
 					y : 10
 					anchors.horizontalCenter: parent.horizontalCenter
-					text:"HUMIDITY CONTROL" 
+					text:"INCUBATOR PARAMETER" 
 					font.family: "Helvetica"
 					font.pointSize: 15
 					color: "white"
 				}
 	
 	Image{
-		  width :80
-		  height : 100
+		  width :60
+		  height : 80
           x:10
           y:50         
           source:"humidity.png"
@@ -914,9 +875,9 @@ Button {
 	
 	Text {
 					id : humidity
-                    x:150
-					y : 50
-                    font.pointSize: 60
+                    x:80
+					y : 55
+                    font.pointSize: 35
                     color: "white"
                     text: "0%"
 					font.family : "HarmoniaSansW01-Bold"
@@ -924,28 +885,69 @@ Button {
 	
 	
 	Image{
+		  width :100
+		  height : 80
+          x:220
+          y:50         
+          source:"thermometer.png"
+		  
+	}
+	
+	Text {
+
+                    x:300
+					y : 55
+                    font.pointSize: 33
+                    color: "white"
+                    text: (gauge2.value).toFixed(1) + "°C"
+					font.family : "HarmoniaSansW01-Bold"
+                }
+	
+	
+	
+	Image{
 		  width :80
 		  height : 80
-          x:10
+          x:0
+          y:160         
+          source:"humidifier.png"
+		  
+	}
+	
+	Text {
+					id : humidifier_label
+                    x:80
+					y : 170
+                    font.pointSize: 35
+                    color: "white"
+                    text: "0 %"
+					font.family : "HarmoniaSansW01-Bold"
+                }
+	
+	
+	Image{
+		  width :70
+		  height : 70
+          x:240
           y:160         
           source:"fan.png"
 		  
 	}
 	
 	Text {
-					
-                    x:150
-					y : 150
-                    font.pointSize: 60
+                    x:320
+					y : 160
+                    font.pointSize: 35
                     color: "white"
-                    text: "0%"
+                    text: (slider_fan.value).toFixed(0) + "%"
 					font.family : "HarmoniaSansW01-Bold"
                 }
 	
 	
+	
 	Text {
 					x : 10
-					y : 270
+					y : 260
 					text:"HUMIDITY SET:" 
 					font.family: "Helvetica"
 					font.pointSize: 15
@@ -1046,7 +1048,7 @@ Button {
 				
 				x : 230
 				y : 310
-                value: 55
+                value: 0
                 //onValueChanged: handlePage.newVal = value
                 width: 150
                 height: 150
@@ -1257,7 +1259,7 @@ Button {
                     color: "white"
                     axisX: DateTimeAxis {
                         
-                        format: "HH:mm:ss.z"
+                        format: "HH:mm:ss"
                         visible:true
 						labelsColor: "white"
                     }
@@ -1269,35 +1271,7 @@ Button {
                 antialiasing: true
             }
 
-            Timer {
-                id: tm2
-                repeat: true
-				interval : 500
-                running: true
-                onTriggered: {
-                        cv.timcnt = cv.timcnt + 1
-                        //cv1.timcnt = cv1.timcnt + 1
-                      
-                        cv3.valueCH1 = radial5.value//parseFloat(slider1.value)
-                       
-                        lines3.append(cv.startTIME+cv.timcnt*cv.intervalTM ,cv3.valueCH1)
-                        
-                        lines1.axisX.min = cv.timcnt < cv.periodGRAPH ? new Date(cv.startTIME) : new Date(cv.startTIME  - cv.periodGRAPH*1000 + cv.timcnt*1000)
-                        lines1.axisX.max = cv.timcnt < cv.periodGRAPH ? new Date(cv.startTIME  + cv.periodGRAPH*1000) : new Date(cv.startTIME   + cv.timcnt*1000)
-
-                        lines3.axisX.min = new Date(cv.startTIME-cv.periodGRAPH*1000 + cv.timcnt*500)
-                        lines3.axisX.max = new Date(cv.startTIME + cv.timcnt*500)
-
-                        lines3.axisX.min = new Date (cv.startTIME-cv.periodGRAPH*1000 + cv.timcnt*cv.intervalTM)  
-                        lines3.axisX.max = new Date (cv.startTIME + cv.timcnt*cv.intervalTM)  
-
-
-                        lines2.axisX.min = new Date(cv.startTIME-cv.periodGRAPH*1000 + cv.timcnt*cv.intervalTM)
-                        lines2.axisX.max = new Date(cv.startTIME + cv.timcnt*cv.intervalTM)
-                    }
-            }
-        
-		
+           
 		}
 	
 	
@@ -1306,7 +1280,7 @@ Button {
 		
 		
 		Text {
-					
+					id : energy_label
 					anchors.horizontalCenter: parent.horizontalCenter
 					y : 340
 					
@@ -1362,7 +1336,7 @@ Button {
 	            dialWidth: 24
 				value : 220
 	            minValue: 0
-	            maxValue: 230
+	            maxValue: 250
 	           // value: text_val2
 	            
 	            textFont 
@@ -1513,6 +1487,8 @@ Button {
 	
 	Component.onCompleted: {
 		cv.startTIME = backend.get_tiempo()*1000
+		cv3.startTIME = backend.get_tiempo()*1000
+		
 	}
 	
 	
@@ -1530,27 +1506,68 @@ Button {
 			radial3.value = backend.voltage()
 			radial4.value = backend.current()
 			radial5.value = backend.power()
-		
+			energy_label.text = backend.energy()
+			
+			backend.fan_mode(fan_mode.checked)
+			
+			backend.fan_gauge(slider_fan.value)
+			
+			if (fan_mode.checked == true){
+				slider_fan.value = backend.fan_speed()
+			}
+			
+			//console.log(slider_input.value - backend.humidity())
+			
+			if (slider_input.value - backend.humidity() > 0){
+				backend.humidifier((slider_input.value - backend.humidity())
+			
+			} else {
+				backend.humidifier(0)
+			}
+			
+			humidifier_label.text = backend.humidifier_display() + "%"
+			
 		}
 		
 		
 	}
 	
-	
-	/*
-	
-		
-		
-		function power_val_read(text) {
-		text_val2.text = text
-		radial2.value = text
-		}
-	
-		
-		
-		function port_val_read(text) {
-		
-		}
-	
-	*/
+	Timer {
+                id: tm
+                repeat: true
+				interval : cv.intervalTM
+                running: true
+                onTriggered: {
+                        cv.timcnt = cv.timcnt + 1
+                        //cv1.timcnt = cv1.timcnt + 1
+                        cv.valueCH1 = parseFloat(slider1.value)
+                        cv.valueCH2 = parseFloat(gauge2.value)
+                        cv3.valueCH1 = radial5.value//parseFloat(slider1.value)
+                        
+						
+						if (lines1.count>cv.periodGRAPH*1000/cv.intervalTM){
+							lines1.remove(0)
+							lines2.remove(0)
+							lines3.remove(0)
+							
+						}
+
+                        lines1.append(cv.startTIME+cv.timcnt*cv.intervalTM ,cv.valueCH1)
+                        lines2.append(cv.startTIME+cv.timcnt*cv.intervalTM ,cv.valueCH2)
+						lines3.append(cv.startTIME+cv.timcnt*cv.intervalTM ,cv3.valueCH1)
+						
+						
+						lines1.axisX.min = new Date(cv.startTIME - cv.periodGRAPH*1000 + cv.timcnt*cv.intervalTM)
+						lines1.axisX.max = new Date(cv.startTIME + cv.timcnt*cv.intervalTM)
+			
+                        lines2.axisX.min = new Date(cv.startTIME - cv.periodGRAPH*1000 + cv.timcnt*cv.intervalTM)
+                        lines2.axisX.max = new Date(cv.startTIME + cv.timcnt*cv.intervalTM)
+						
+						lines3.axisX.min = new Date(cv.startTIME - cv.periodGRAPH*1000 + cv.timcnt*cv.intervalTM)
+                        lines3.axisX.max = new Date(cv.startTIME + cv.timcnt*cv.intervalTM)
+						
+						
+                    }
+            }
+        
 }

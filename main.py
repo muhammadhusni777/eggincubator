@@ -85,6 +85,11 @@ i_windup = 100
 offset = 0
 motor = "OFF"
 motor_speed = 0
+G1 = 3
+G2 = 10
+G3 = 8
+
+
 
 
 humidity = 0
@@ -125,6 +130,14 @@ data_send = ""
 voltage = 0
 current = 0
 power = 0
+energy = 0
+
+fan_mode = 0
+fan_power = 0
+fan_gauge = 0
+fan_speed = 0
+
+humidifier = 0
 
 ########## mengisi class table dengan instruksi pyqt5#############
 #----------------------------------------------------------------#
@@ -167,6 +180,53 @@ class table(QObject):
     @pyqtSlot(result=float)
     def power(self):  return (round(power,1))
     
+    @pyqtSlot(result=float)
+    def energy(self):  return (round(energy,3))
+    
+    @pyqtSlot(result=float)
+    def fan_speed(self):  return (fan_speed)
+    
+    
+    @pyqtSlot(result=float)
+    def humidifier_display(self):  return (round(humidifier,0))
+    
+    @pyqtSlot('QString')
+    def fan_mode(self, value):
+        global fan_mode
+        
+        if (value == "true"):
+            fan_mode = "auto"
+            
+        if (value == "false"):
+            fan_mode = "manual"
+            
+        
+            
+            
+        
+    
+    @pyqtSlot('QString')
+    def fan_power(self, value):
+        global fan_power
+        fan_power = value
+        
+        
+    @pyqtSlot('QString')
+    def fan_gauge(self, value):
+        global fan_gauge
+        fan_gauge = (float(value))
+        #print(fan_gauge)
+        
+    
+    
+    @pyqtSlot('QString')
+    def humidifier(self, value):
+        global humidifier
+        humidifier = (float(value) * G3)
+        if (humidifier > 100):
+            humidifier = 100
+        
+    
     
     ########setpoint value from GUI##################
     @pyqtSlot('QString')
@@ -204,13 +264,13 @@ class table(QObject):
     def analysis(self, value):
         global analysis
         analysis = str(value)
-        print(analysis)
+        #print(analysis)
         
     @pyqtSlot('QString')
     def step_level(self, value):
         global step_level
         step_level = str(value)
-        print(step_level)
+        #print(step_level)
         
         
     @pyqtSlot('QString')
@@ -277,9 +337,21 @@ def pid_control_process(num):
     global voltage
     global current
     global power
+    global energy
     
     global data_send
     
+    global fan_mode
+    global fan_power
+    global fan_gauge
+    
+    global fan_speed
+    global humidifier
+    
+    global G1
+    global G2
+    global G3
+    global K1
     
     while True:
         #print(ki_control)
@@ -358,6 +430,16 @@ def pid_control_process(num):
             motor_command = int(step_level)
         
         
+        if (fan_mode == "auto"):
+            if (error < 0):
+                fan_speed = (abs(error) * G2) + (G1 * d_control)
+            else:
+                fan_speed = 0
+        
+        if (fan_mode == "manual"):
+            fan_speed = fan_gauge
+        
+        
         if (serial_status == 'connected'):
             if (serial_status != serial_status_prev):
                 ser = serial.Serial(str(port),9600,timeout=0.1)
@@ -375,6 +457,7 @@ def pid_control_process(num):
                 voltage = float(data[2])
                 current = float(data[3])
                 power = voltage*current
+                energy = float(data[4])
             except:
                 pass
             
@@ -382,8 +465,8 @@ def pid_control_process(num):
             serial_send_time = time.time() - serial_send_time_prev
             
             if (serial_send_time > 0.5):
-                #print(data_send)
-                data_send = str("*") + str(int(motor_speed)) + str("|") + str("2") + str("|") + str("3") + str("|")+ str("4") +str("|")
+                print(data_send)
+                data_send = str("*") + str(int(motor_speed)) + str("|") + str(fan_speed) + str("|") + str(humidifier) + str("|")+ str("4") +str("|")
                     
                 ser.write(str(data_send).encode())
                 serial_read = 1

@@ -16,6 +16,9 @@ int zc_condition;
 int saturation = 128;
 int alpha_buff = 125;
 
+unsigned long message_time;
+unsigned long message_time_prev;
+
 void setup() {
   
 
@@ -53,7 +56,7 @@ void zc_check() {
     i++;
   }
 
-   if (i > saturation){
+   if (i > 200){
         zc_condition = 0;            
       } else{
         zc_condition = 1;
@@ -81,7 +84,8 @@ void loop() {
   
   sensor_raw = ((0.1155*analogRead(A1))-16.755);
   sensor = (0.5* sensor) + (0.5 * sensor_raw);
-  
-  Serial.println(sensor);  
+
+  Serial.print(sensor); 
+  Serial.println(); 
 
 }

@@ -18,6 +18,8 @@ float sensor_raw;
 float voltage;
 float current;
 float power;
+float energy;
+
 
 float h;
 
@@ -34,7 +36,7 @@ unsigned long refresh_time_prev;
 
 unsigned long i=0;               
 volatile boolean zero_cross=0;  
-int AC_pin = 10;                
+int AC_pin = 7;                
 int alpha = 125;                                          
 int freqStep = 75;    
 int zc_condition = 0;
@@ -42,13 +44,24 @@ int zc_condition_prev = 0;
 int saturation = 128;
 int alpha_buff = 125;
 
+int fan_pin = 3;
+unsigned long fan_speed;
+
+unsigned long fan_counter;
+unsigned long fan_counter_prev;
+unsigned long fan_periods = 100000;
+
 #define DHTPIN 4
 #define DHTTYPE DHT22 
 
 DHT dht(DHTPIN, DHTTYPE);
 
+unsigned long serial_send;
+unsigned long serial_send_prev;
+
 void setup() {
   pinMode(AC_pin, OUTPUT);                          
+  pinMode(fan_pin, OUTPUT);
 
   attachInterrupt(0, zero_cross_detect, RISING);    
   Timer1.initialize(freqStep);                      
@@ -57,14 +70,15 @@ void setup() {
   Serial.begin(9600);
   dht.begin();
 
-
+  h = dht.readHumidity();
 }
 
 
 void zero_cross_detect() {    
   zero_cross = true;               
   i=0;
-  digitalWrite(AC_pin, LOW);       
+  digitalWrite(AC_pin, LOW);
+       
 }   
 
 void zc_check() {                   
@@ -75,13 +89,15 @@ void zc_check() {
       zero_cross = false; 
     } 
     else {
-    i++;     
+    i++; 
+    fan_counter++;    
     }    
   }
   
   else {
     digitalWrite(AC_pin, LOW); //debug                                  
     i++;
+    fan_counter++;  
   }
 
   if (i > 200){
@@ -89,13 +105,7 @@ void zc_check() {
       } else{
         zc_condition = 1;
       }
- /*
- if (zc_condition == 1){
-   voltage = 220;
- } else {
-   voltage = 0;
- }
- */
+  
                          
 }    
 
@@ -143,12 +153,9 @@ void loop() {
   
   refresh_time = millis() - refresh_time_prev;
 
-
   if (refresh_time > 30000){
   
   h = dht.readHumidity();
-
-
   refresh_time_prev = millis();
   
   //baca sensor daya
@@ -158,10 +165,16 @@ void loop() {
   }
   current = pzem.current();
   power = pzem.power();
-
+  energy = pzem.energy();
 
   }
 
+
+  fan_speed = map(secondValue.toInt(),0,100,0,100);
+
+  serial_send = millis() - serial_send_prev;
+
+  if (serial_send > 500){
   Serial.print(sensor);  
   Serial.print(":");
   Serial.print(h); 
@@ -169,12 +182,24 @@ void loop() {
   Serial.print(voltage);
   Serial.print(":");
   Serial.print(current);
-  
-
-  
+  Serial.print(":");
+  Serial.print(energy,3);
   Serial.println(); 
-  delay(500);
- 
 
-    
+
+  serial_send_prev = millis();
+  }
+  
+  fan_counter = millis() - fan_counter_prev;
+
+  if (fan_counter < fan_speed){
+    digitalWrite(fan_pin, HIGH);
+  } else {
+    digitalWrite(fan_pin, LOW);
+  }
+  
+  if (fan_counter > 100){
+    fan_counter_prev = millis();
+  }
+
 }
