@@ -92,7 +92,7 @@ G3 = 8
 
 
 
-humidity = 0
+humidity = 55
 
 waktu = datetime.now()
 print(waktu.day)
@@ -145,6 +145,7 @@ class table(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
         self.app = QApplication(sys.argv)
+        self.app.setWindowIcon(QIcon("eggpic.png"))
         self.engine = QQmlApplicationEngine(self)
         self.engine.rootContext().setContextProperty("backend", self)    
         self.engine.load(QUrl("main.qml"))

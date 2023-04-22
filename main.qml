@@ -10,12 +10,18 @@ import "controls"
 
 import PyCVQML 1.0
 
+import QtQuick 2.9
+import QtQuick.Controls 1.4
+import QtQuick.Controls 2.0
+import QtQuick.Layouts 1.3
+import QtQuick.Controls.Styles 1.4
 
 Window {
 	id: root
 	visible: true
 	width: 1400
 	height: 880
+	title:"EGG HATCHING RESEARCH"
 	color:"#024959"
 	property bool fullscreen: false
 	
@@ -65,17 +71,20 @@ Window {
 
 	
 	
-	Text {
-					
+	Button {
 					//anchors.horizontalCenter: parent.horizontalCenter
 					x: 450
-					y : 600
+					y : 600	
+					text: "Tentang Pembuat"
 					
-					text: "DIKY ZAKARIA, AJANG RAHMAT, MUHAMMAD HUSNI\nBILAL, ALI, FAUZIE, DANY"
-					font.family: "Helvetica"
-					font.pointSize: 12
-					color: "white"
+					onClicked:{
+						wnd5.visible = true
+					}
+					
 				}
+				
+				
+				
 	
 	Text {
 					
@@ -354,11 +363,11 @@ Button {
 	Button {
 		id: button_kwh
 		x :750
-		y :180
+		y :150
 		width : 110
-		height : 90
+		height : 60
 		visible : true
-		text: "power \n consumption"
+		text: "POWER \n CONSUMPTION"
 		
 		onClicked:{
 		wnd3.visible = true
@@ -367,6 +376,25 @@ Button {
 		
 		
 	}
+	
+	
+	Button {
+		//id: button_kwh
+		x :750
+		y :220
+		width : 110
+		height : 60
+		visible : true
+		text: "PID \n SETTING"
+		
+		onClicked:{
+		wnd4.visible = true
+		}
+		
+		
+		
+	}
+	
 	
 	
 	
@@ -540,7 +568,7 @@ Button {
 				y:10
 				height: 20
 				width: 275
-				//value: 80
+				value: 37
 				from : 25 
 				to : 40
 				stepSize: 1
@@ -1485,11 +1513,389 @@ Button {
 	
 	
 	
+	Window {
+        id: "wnd4"
+        visible: false
+		color : "#1F2226"
+		title:"PID OPTIONS"
+		width: 500
+		height: 300
+		flags:Qt.Dialog
+		
+		Text {
+					
+					anchors.horizontalCenter: parent.horizontalCenter
+					y : 10
+					
+					text: "PID OPTIONS"
+					font.family: "Helvetica"
+					font.pointSize: 22
+					color: "white"
+		}
+		
+		Button {
+		id : standard
+		x :50
+		y :70
+		width : 90
+		height : 90
+		checkable : true
+		checked : true
+		text: "STANDARD"
+		
+		onClicked:{
+			aggresive.checked = false
+			conservative.checked = false
+			slider2.value = 0.2
+			slider2.to = 0.5
+			slider3.value = 0.11
+			slider3.to = 0.5
+			slider4.value = 0.05
+			slider4.to = 0.5
+			
+		}
+		
+		
+		}
+		
+		
+		Button {
+		id : aggresive
+		x :200
+		y :70
+		width : 90
+		height : 90
+		checkable : true
+		text: "AGRRESIVE"
+		
+		onClicked:{
+			standard.checked = false
+			conservative.checked = false
+			slider2.value = 0.5
+			slider2.to = 0.5
+			slider3.value = 0.31
+			slider3.to = 0.5
+			slider4.value = 0.1
+			slider4.to = 0.5
+		}
+		
+		}
+		
+		Button {
+		id : conservative
+		x :350
+		y :70
+		width : 95
+		height : 90
+		checkable : true
+		text: "CONSERVATIVE"
+		
+		onClicked:{
+			aggresive.checked = false
+			standard.checked = false
+			slider2.value = 0.08
+			slider2.to = 0.5
+			slider3.value = 0.01
+			slider3.to = 0.5
+			slider4.value = 0.5
+			slider4.to = 0.5
+		
+		}
+		
+		}
+		
+		
+		
+	}
+	
+	
+	
+	
+	
+Window {
+	id : wnd5
+	width: 500
+	//maximumWidth : 1280
+	//minimumWidth : width
+    height: 350
+	//maximumHeight : 800
+	//minimumHeight : height
+	title:"Tentang Pembuat"
+	color : "white"
+    visible: false
+    //flags: Qt.WindowMaximized //Qt.Dialog
+	
+	Item {
+        id: page
+        anchors.fill: parent
+        width:root.width
+        height: root.height
+        
+		
+		ScrollView {
+            id:scrollView
+            anchors.fill:parent
+		
+			
+			
+            
+		style: ScrollViewStyle {
+			handle: Rectangle {
+			x: 0
+            implicitWidth: 10
+            implicitHeight: 30
+            color: "red"
+			
+        }
+		
+		minimumHandleLength : 10
+		
+        scrollBarBackground: Rectangle {
+            implicitWidth: 10
+            implicitHeight: 30
+            color: "transparent"
+        }
+        decrementControl: Rectangle {
+            implicitWidth: 0
+            implicitHeight: 0
+            color: "transparent"
+        }
+        incrementControl: Rectangle {
+            implicitWidth: 0
+            implicitHeight: 0
+            color: "transparent"
+        }
+    }
+			
+            Column{
+                width:parent.width
+                spacing:4
+                
+				Rectangle{
+					
+					width: 500
+					height: 120
+					color: "#024959"
+					
+					Text {
+					
+					anchors.horizontalCenter: parent.horizontalCenter
+					y : 10
+					
+					text: "TIM EGG HATCHING RESEARCH"
+					font.family: "Helvetica"
+					font.pointSize: 18
+					color: "white"
+				}
+				
+				
+				Text {
+					
+					anchors.horizontalCenter: parent.horizontalCenter
+					y : 40
+					
+					text: "MKB - UPI PURWAKARTA"
+					font.family: "Helvetica"
+					font.pointSize: 14
+					color: "white"
+				}
+				
+				Text {
+					
+					anchors.horizontalCenter: parent.horizontalCenter
+					y : 60
+					
+					text: "2023"
+					font.family: "Helvetica"
+					font.pointSize: 14
+					color: "white"
+				}
+				
+					
+				}
+				
+				Rectangle{
+					
+					width: 500
+					height: 150
+					color: "#024959"
+					
+					Image{
+					  x:0
+					  y:0
+					  width : 100
+					  height : parent.height
+					  source : "kangdiky.png"
+						
+					}
+					
+					Text{
+						x: 120
+						y : 30
+						text: "Diky Zakaria, M.T (Team Leader) \nDosen, Pakar Sistem Kendali"
+						font.family: "Helvetica"
+						font.pointSize: 16
+						color: "white"
+						
+					}
+					
+					
+				}
+				
+				Rectangle{
+					
+					width: 500
+					height: 150
+					color: "#024959"
+					
+					Image{
+					  x:0
+					  y:0
+					  width : 100
+					  height : parent.height
+					  source : "husni.png"
+						
+					}
+					
+					Text{
+						x: 120
+						y : 30
+						text: "Muhammad Husni \nPython Programmer"
+						font.family: "Helvetica"
+						font.pointSize: 16
+						color: "white"
+						
+					}
+					
+					
+				}
+				
+				Rectangle{
+					
+					width: 500
+					height: 150
+					color: "#024959"
+					
+					Image{
+					  x:0
+					  y:0
+					  width : 100
+					  height : parent.height
+					  source : "ajang.png"
+						
+					}
+					
+					Text{
+						x: 120
+						y : 30
+						text: "Ajang Rahmat \nIoT & Image Processing Developer"
+						font.family: "Helvetica"
+						font.pointSize: 16
+						color: "white"
+						
+					}
+					
+					
+				}
+				
+				Rectangle{
+					
+					width: 500
+					height: 150
+					color: "#024959"
+					
+					Text{
+						x: 120
+						y : 30
+						text: "Ali \nMechanical Designer"
+						font.family: "Helvetica"
+						font.pointSize: 16
+						color: "white"
+						
+					}
+					
+					
+				}
+				
+				Rectangle{
+					
+					width: 500
+					height: 150
+					color: "#024959"
+					
+					Text{
+						x: 120
+						y : 30
+						text: "Bilal \n ..."
+						font.family: "Helvetica"
+						font.pointSize: 16
+						color: "white"
+						
+					}
+					
+				}
+				
+				Rectangle{
+					
+					width: 500
+					height: 150
+					color: "#024959"
+					
+					Text{
+						x: 120
+						y : 30
+						text: "Dany \n..."
+						font.family: "Helvetica"
+						font.pointSize: 16
+						color: "white"
+						
+					}
+				}
+				
+				Rectangle{
+					
+					width: 500
+					height: 150
+					color: "#024959"
+					
+					Text{
+						x: 120
+						y : 30
+						text: "Fauzie \n..."
+						font.family: "Helvetica"
+						font.pointSize: 16
+						color: "white"
+						
+					}
+					
+				}
+				
+			
+			}
+
+        }
+    
+	
+	
+	}	
+
+	
+	
+}
+	
+	
+	
+	
+	
 	Component.onCompleted: {
 		cv.startTIME = backend.get_tiempo()*1000
 		cv3.startTIME = backend.get_tiempo()*1000
 		
 	}
+	
+	
+	
+	
 	
 	
 	Timer{
@@ -1506,7 +1912,7 @@ Button {
 			radial3.value = backend.voltage()
 			radial4.value = backend.current()
 			radial5.value = backend.power()
-			energy_label.text = backend.energy()
+			energy_label.text = "used power : " + backend.energy() + " kWH"
 			
 			backend.fan_mode(fan_mode.checked)
 			
@@ -1519,7 +1925,7 @@ Button {
 			//console.log(slider_input.value - backend.humidity())
 			
 			if (slider_input.value - backend.humidity() > 0){
-				backend.humidifier((slider_input.value - backend.humidity())
+				backend.humidifier(slider_input.value - backend.humidity())
 			
 			} else {
 				backend.humidifier(0)
@@ -1531,6 +1937,8 @@ Button {
 		
 		
 	}
+	
+	
 	
 	Timer {
                 id: tm
